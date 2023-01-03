@@ -131,13 +131,27 @@ static void so_trata_sisop_escr(so_t *self)
 static void so_trata_sisop_fim(so_t *self)
 {
   err_t err = finaliza_processo_em_exec(&self->escalonador);
+
   if(err != ERR_OK) {
     t_printf("Erro na finalização do processo.");
     self->paniquei = true;
   } else {
-    //interrupção de relógio extra para tratar
-    //a não existencia de processo em exec.
-    so_int(self, ERR_TIC);
+    processo_t* processo = retorna_proximo_pronto(self->escalonador);
+    if (processo == NULL) {
+      cpue_muda_modo(self->cpue, zumbi);
+    } else {
+      cpue_muda_modo(self->cpue, usuario);
+      processo_executa(processo);
+      cpue_copia(processo_cpu(processo), self->cpue);
+      contr_copia_mem(self->contr, processo_mem(processo));     
+    }
+
+    // interrupção da cpu foi atendida
+    cpue_muda_erro(self->cpue, ERR_OK, 0);
+    // incrementa o PC
+    cpue_muda_PC(self->cpue, cpue_PC(self->cpue));
+    // altera o estado da CPU (deveria alterar o estado do processo)
+    exec_altera_estado(contr_exec(self->contr), self->cpue);
   }
 }
 
