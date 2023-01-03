@@ -5,6 +5,7 @@
 #include "cpu_estado.h"
 #include "es.h"
 #include "contr.h"
+#include "tela.h"
 
 struct processo_t {
   int num;
@@ -28,47 +29,51 @@ processo_t *processo_cria(int num, processo_estado_t estado)
     return self;
 }
 
-void processo_init_mem(processo_t *self)
+err_t processo_init_mem(processo_t *self)
 {
     int num = self->num;
 
     switch (num)
     {
     case 1:
-        int progr[] = {
+        int progr1[] = {
             #include "p1.maq"
         };
-        transf_mem(self, progr);
+        int tam_progr1 = sizeof(progr1)/sizeof(progr1[0]);
+        return transf_mem(self, progr1, tam_progr1);
     case 2:
-        int progr[] = {
+        int progr2[] = {
             #include "p2.maq"
         };
-        transf_mem(self, progr);
+        int tam_progr2 = sizeof(progr2)/sizeof(progr2[0]);
+        return transf_mem(self, progr2, tam_progr2);
     case 3:
-        int progr[] = {
+        int progr3[] = {
             #include "p3.maq"
         };
-        transf_mem(self, progr);
+        int tam_progr3 = sizeof(progr3)/sizeof(progr3[0]);
+        return transf_mem(self, progr3, tam_progr3);
     default:
         int* progr = NULL;
-        transf_mem(self, progr);
+        return transf_mem(self, progr, 0);
     }
 }
 
-void transf_mem(processo_t *self, int* progr)
+err_t transf_mem(processo_t *self, int* progr, int tam_progr)
 {
-  // programa para executar na nossa CPU
-  int tam_progr = sizeof(progr)/sizeof(progr[0]);
-
   if(progr != NULL) {
     mem_t *mem = self->memoria;
     for (int i = 0; i < tam_progr; i++) {
-        if (mem_escreve(mem, i, progr[i]) != ERR_OK) {
-        t_printf("so.init_mem: erro de memória, endereco %d\n", i);
-        panico(self);
+        err_t err = mem_escreve(mem, i, progr[i]);
+        if (err != ERR_OK) {
+            t_printf("processo.transf_mem: erro de memória, endereco %d\n", i);
+            return err;
         }
     }
+    return ERR_OK;
   }
+
+  return ERR_END_INV;
 }
 
 void processo_destroi(processo_t* self)

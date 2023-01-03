@@ -14,7 +14,6 @@ naole
         ; lê cont
         cargi TELA
         sisop SO_LE       ; retorna A=err, X=dado
-        desvnz naole      ; se der erro, tenta de novo
         mvxa
         armm cont
 ali
@@ -23,7 +22,6 @@ ali
         mvax
 denovo  cargi TELA
         sisop SO_ESCR     ; impr X em A, retorna A=err
-        desvnz denovo     ; se der erro, tenta de novo
         ; xis++   (xis ainda tá em X)
         incx
         mvxa

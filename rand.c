@@ -9,10 +9,11 @@
 struct rand_t {
     int limite;
     int tempo_parado;
+    int intervalo_le;
     rel_t *relogio;
 };
 
-rand_t *rand_cria(int limite, rel_t* relogio)
+rand_t *rand_cria(int limite, rel_t* relogio, int intervalo_le)
 {
     rand_t *self;
     self = malloc(sizeof(rand_t));
@@ -21,6 +22,7 @@ rand_t *rand_cria(int limite, rel_t* relogio)
         self->limite = limite;
         self->relogio = relogio;
         self->tempo_parado = 0;
+        self->intervalo_le = intervalo_le;
     }
     return self;
 }
@@ -53,7 +55,7 @@ bool rand_pronto(void *disp, int id, acesso_t acesso)
 {
     rand_t* self = (rand_t*)disp;
     
-    if((rel_agora(self->relogio) - (self->tempo_parado + 15)) >= 0) {
+    if((rel_agora(self->relogio) - (self->tempo_parado + self->intervalo_le)) >= 0) {
         return true;
     }
     return false;

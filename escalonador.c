@@ -121,3 +121,13 @@ bool tem_processo_vivo(no_t* self)
     if(head == NULL) return false;
     return true;
 }
+
+void imprime_tabela(no_t* self)
+{
+    no_t* atual = self;
+    while (atual != NULL) {
+        t_printf("num: %d estado: %d", processo_num(atual->processo), processo_estado(atual->processo));
+        atual = atual->next;
+    }
+}
+

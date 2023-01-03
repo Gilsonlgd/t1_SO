@@ -8,7 +8,7 @@
 typedef struct rand_t rand_t;
 
 //cria e inicializa um dispositivo que gera numeros aleatórios
-rand_t *rand_cria(int limite, rel_t* rel);
+rand_t *rand_cria(int limite, rel_t* rel, int intervalo_le);
 
 //destroi um dispositivo random
 // nada pode ser feito depois desta chamada

@@ -46,5 +46,7 @@ bool tem_processo_executando(no_t* self);
 
 // retorna false se não houver mais processos a serem executados
 bool tem_processo_vivo(no_t* self);
+//imprime a tabela de processos
+void imprime_tabela(no_t* self);
 
 #endif

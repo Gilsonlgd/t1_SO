@@ -14,10 +14,10 @@ typedef enum { pronto, em_execucao, bloqueado } processo_estado_t;
 processo_t* processo_cria(int num, processo_estado_t estado);
 
 //inicia a memória do processo quando criado
-void processo_init_mem(processo_t *self);
+err_t processo_init_mem(processo_t *self);
 
-//seleciona o arquivo correspondente ao código do processo
-void transf_mem(processo_t *self, int* progr);
+// transfere o .maq para a memória do progrma 
+err_t transf_mem(processo_t *self, int* progr, int tam_progr);
 
 void processo_destroi(processo_t* self);
 
@@ -52,5 +52,6 @@ int processo_num(processo_t* self) ;
 
 //retorna o dispositivo que causou o último bloqueio do processo
 int processo_disp(processo_t* processo);
+
 
 #endif

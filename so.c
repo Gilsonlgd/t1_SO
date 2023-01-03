@@ -131,16 +131,32 @@ static void so_trata_sisop_escr(so_t *self)
 static void so_trata_sisop_fim(so_t *self)
 {
   err_t err = finaliza_processo_em_exec(&self->escalonador);
-
-  if(err != ERR_OK) panico(self);
+  if(err != ERR_OK) {
+    t_printf("Erro na finalização do processo.");
+    self->paniquei = true;
+  } else {
+    //interrupção de relógio extra para tratar
+    //a não existencia de processo em exec.
+    so_int(self, ERR_TIC);
+  }
 }
 
 // chamada de sistema para criação de processo
 static void so_trata_sisop_cria(so_t *self)
 {
   processo_t* processo = processo_cria(cpue_A(self->cpue), pronto);
-  processo_init_mem(processo);
-  insere(&self->escalonador, processo);
+  err_t err = processo_init_mem(processo);
+  if (err != ERR_OK) {
+    panico(self);
+  } else {
+    insere(&self->escalonador, processo);
+  }
+  // interrupção da cpu foi atendida
+  cpue_muda_erro(self->cpue, err, 0);
+  // incrementa o PC
+  cpue_muda_PC(self->cpue, cpue_PC(self->cpue)+2);
+  // altera o estado da CPU 
+  exec_altera_estado(contr_exec(self->contr), self->cpue);
 }
 
 // trata uma interrupção de chamada de sistema
@@ -223,7 +239,7 @@ bool so_ok(so_t *self)
   return !self->paniquei;
 }
 
-// carrega um programa na memória
+// carrega o programa inicial na memória
 static void init_mem(so_t *self)
 {
   // programa para executar na nossa CPU

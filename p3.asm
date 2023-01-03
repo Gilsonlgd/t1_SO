@@ -33,7 +33,7 @@ ali
      CARGI RAND
      sisop SO_LE
      ; escreve resultado
-     CARGI TELA
+     CARGI TELA-
      sisop SO_ESCR
      ;xis++
      cargm xis       ;A=xis
