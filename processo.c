@@ -28,34 +28,36 @@ processo_t *processo_cria(int num, processo_estado_t estado)
     return self;
 }
 
-int* processo_select(int num)
+void processo_init_mem(processo_t *self)
 {
+    int num = self->num;
+
     switch (num)
     {
     case 1:
         int progr[] = {
             #include "p1.maq"
         };
-        return progr;
+        transf_mem(self, progr);
     case 2:
         int progr[] = {
             #include "p2.maq"
         };
-        return progr;
+        transf_mem(self, progr);
     case 3:
         int progr[] = {
             #include "p3.maq"
         };
-        return progr;    
+        transf_mem(self, progr);
     default:
-        return NULL;
+        int* progr = NULL;
+        transf_mem(self, progr);
     }
 }
 
-static void processo_init_mem(processo_t *self)
+void transf_mem(processo_t *self, int* progr)
 {
   // programa para executar na nossa CPU
-  int* progr = programa_select(self->num);
   int tam_progr = sizeof(progr)/sizeof(progr[0]);
 
   if(progr != NULL) {

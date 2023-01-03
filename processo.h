@@ -14,10 +14,10 @@ typedef enum { pronto, em_execucao, bloqueado } processo_estado_t;
 processo_t* processo_cria(int num, processo_estado_t estado);
 
 //inicia a memória do processo quando criado
-static void processo_init_mem(processo_t *self);
+void processo_init_mem(processo_t *self);
 
 //seleciona o arquivo correspondente ao código do processo
-int* processo_select(int num);
+void transf_mem(processo_t *self, int* progr);
 
 void processo_destroi(processo_t* self);
 

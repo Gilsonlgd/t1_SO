@@ -18,6 +18,8 @@ teste: ${OBJS}
 # para gerar so.o, precisa, além do so.c, dos arquivos .maq
 so.o: so.c ${MAQS}
 
+processo.o: processo.c ${MAQS}
+
 # para transformar um .asm em .maq, precisamos do montador
 %.maq: %.asm montador
 	./montador $*.asm > $*.maq
