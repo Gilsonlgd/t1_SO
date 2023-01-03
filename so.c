@@ -131,7 +131,6 @@ static void so_trata_sisop_escr(so_t *self)
 static void so_trata_sisop_fim(so_t *self)
 {
   err_t err = finaliza_processo_em_exec(&self->escalonador);
-
   if(err != ERR_OK) {
     t_printf("Erro na finalização do processo.");
     self->paniquei = true;
@@ -204,6 +203,7 @@ static void so_trata_tic(so_t *self)
   //copia o estado atual da cpu, em caso de não haver alteração usual.
   exec_copia_estado(contr_exec(self->contr), self->cpue);
   processo_t* processo;
+  imprime_tabela(self->escalonador);
 
   if (!tem_processo_executando(self->escalonador)) {
     processo = retorna_proximo_pronto(self->escalonador);
