@@ -78,10 +78,8 @@ static void so_trata_sisop_le(so_t *self)
   cpue_muda_PC(self->cpue, cpue_PC(self->cpue) + inc);
   // interrupção da cpu foi atendida
   cpue_muda_erro(self->cpue, err, 0);
-  // altera o estado da CPU (deveria alterar o estado do processo)
+  // altera o estado da CPU
   exec_altera_estado(contr_exec(self->contr), self->cpue);
-
-  //altera estado do processo
 }
 
 // chamada de sistema para escrita de E/S
@@ -92,8 +90,6 @@ static void so_trata_sisop_escr(so_t *self)
 {
   bool pronto;
   int inc = 2;
-  // faz escrita assíncrona.
-  // deveria ser síncrono, verificar es_pronto() e bloquear o processo
   int disp = cpue_A(self->cpue);
   int val = cpue_X(self->cpue);
   err_t err = ERR_OK;
@@ -121,10 +117,8 @@ static void so_trata_sisop_escr(so_t *self)
   cpue_muda_erro(self->cpue, err, 0);
   // incrementa o PC
   cpue_muda_PC(self->cpue, cpue_PC(self->cpue)+ inc);
-  // altera o estado da CPU (deveria alterar o estado do processo)
+  // altera o estado da CPU
   exec_altera_estado(contr_exec(self->contr), self->cpue);
-
-  //altera estado do processo
 }
 
 // chamada de sistema para término do processo
@@ -144,7 +138,6 @@ static void so_trata_sisop_fim(so_t *self)
       cpue_copia(processo_cpu(processo), self->cpue);
       contr_copia_mem(self->contr, processo_mem(processo));     
     }
-
     // interrupção da cpu foi atendida
     cpue_muda_erro(self->cpue, ERR_OK, 0);
     // incrementa o PC
@@ -200,10 +193,7 @@ static void so_trata_sisop(so_t *self)
 // trata uma interrupção de tempo do relógio
 static void so_trata_tic(so_t *self)
 {
-  //copia o estado atual da cpu, em caso de não haver alteração usual.
-  exec_copia_estado(contr_exec(self->contr), self->cpue);
   processo_t* processo;
-  imprime_tabela(self->escalonador);
 
   if (!tem_processo_executando(self->escalonador)) {
     processo = retorna_proximo_pronto(self->escalonador);
@@ -215,14 +205,13 @@ static void so_trata_tic(so_t *self)
       cpue_copia(processo_cpu(processo), self->cpue);
       contr_copia_mem(self->contr, processo_mem(processo));
     }
+    // interrupção da cpu foi atendida
+    cpue_muda_erro(self->cpue, ERR_OK, 0);
+    // incrementa o PC
+    cpue_muda_PC(self->cpue, cpue_PC(self->cpue));
+    // altera o estado da CPU
+    exec_altera_estado(contr_exec(self->contr), self->cpue);
   }
-
-  // interrupção da cpu foi atendida
-  cpue_muda_erro(self->cpue, ERR_OK, 0);
-  // incrementa o PC
-  cpue_muda_PC(self->cpue, cpue_PC(self->cpue));
-  // altera o estado da CPU (deveria alterar o estado do processo)
-  exec_altera_estado(contr_exec(self->contr), self->cpue);
 }
 
 // houve uma interrupção do tipo err — trate-a
