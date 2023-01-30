@@ -3,6 +3,11 @@
 - Neste trabalho, a ideia é implementar multiprogramação no S.O;
 - A partir deste embrião serão desenvolvidos os T1 e T2.
 
+## Programas Utilizados para testes:
+- São utilizados dois programas: o p2 e p3;
+- p2 é uma implementação do professor, le um número do terminar 1 e imprime todos os numeros de 1 até ele;
+- p3 é uma implementação minha. Utiliza um dispositivo virtual que gera números aleatórios. Nesse caso está imprimindo 10 números aleatório no terminal 0;
+
 ## Um geral:
 O SO mantém toda a informação referente a cada processo em uma tabela de processos. Essa tabela contém o estado da CPU para esse processo, o estado do processo (em execução, pronto, bloqueado), informação que permite saber porque o processo está bloqueado e como/quando desbloqueá-lo. Para facilitar a implementação, mantém inclusive uma cópia de toda a memória principal. A troca de um processo para outro inclui o salvamento e recuperação de toda a memória do sistema. Mais tarde, quando falarmos sobre gerenciamento de memória, isso é otimizado.
 
@@ -23,3 +28,4 @@ O funcionamento do SO no atendimento de uma interrupção é ser algo como:
 - faz o despacho — recupera o contexto, correspondente ao processo escolhido
 
 Caso o escalonador não tenha conseguido escolher nenhum processo (não tem nenhum processo pronto), o despacho simplesmente coloca a CPU em modo zumbi.
+
